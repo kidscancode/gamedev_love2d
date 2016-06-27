@@ -1,0 +1,1 @@
+char9_01.png.png 8 76, char9_02.png.png 138 76, char9_03.png.png 268 78, char9_04.png.png 404 78, char9_05.png.png 8 210, char9_06.png.png 144 208.

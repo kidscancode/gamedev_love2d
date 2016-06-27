@@ -1,0 +1,119 @@
+Game = class('Game')
+
+local layer
+
+function Game:initialize()
+    self.show_bump = false
+    self.world_objects = {}
+    self.map = sti.new('assets/maps/test2.lua')
+    -- self.map:addCustomLayer("Sprite Layer", 6)
+    self.map_offset = vector(0, 0)
+    self.camera = gamera.new(0, 0, 50*64, 30*64)
+    self.world = bump.newWorld()
+    for k,object in pairs(self.map.objects) do
+        if object.name == "Player" then
+            self.player = Player:new(object.x, object.y)
+            self.world:add(self.player, self.player.pos.x - self.player.offset.x,
+                           self.player.pos.y - self.player.offset.y,
+                           self.player.width - 0,
+                           self.player.height - 10)
+        end
+        if object.name == "Wall" then
+            local w = Wall:new(object.x, object.y, object.width, object.height)
+            -- table.insert(self.world_objects, w)
+            self.world:add(w, w.x, w.y, w.width, w.height)
+        end
+    end
+end
+
+local playerFilter = function(item, other)
+    if other:isInstanceOf(Wall) then return 'slide'
+    end
+end
+
+local bulletFilter = function(item, other)
+    if other:isInstanceOf(Wall) then return 'bounce' end
+    if other:isInstanceOf(Player) then return 'cross' end
+end
+
+function Game:update(dt)
+    local d = vector(1, 0)
+    self.map:update(dt)
+    self.player:update(dt)
+
+    for i,o in pairs(self.world_objects) do
+        o:update(dt)
+        local actX, actY, cols, len = self.world:move(o, o.pos.x, o.pos.y, bulletFilter)
+        for i=1, len do
+            if cols[i].other:isInstanceOf(Wall) then
+                -- o.delete = false
+                o.pos = vector(actX, actY)
+                if cols[i].normal.x ~= 0 then
+                    o.vel.x = -o.vel.x
+                end
+                if cols[i].normal.y ~= 0 then
+                    o.vel.y = -o.vel.y
+                end
+            end
+        end
+        if o.delete then
+            self.world:remove(o)
+            self.world_objects[i] = nil
+        end
+
+    end
+    self.camera:setPosition(self.player.pos.x, self.player.pos.y)
+    -- self.player.on_ground = false
+
+    -- collide player with objects
+    local actX, actY, cols, len = self.world:move(self.player, self.player.pos.x,
+                                                  self.player.pos.y, playerFilter)
+    for i=1, len do
+        if cols[i].other:isInstanceOf(Wall) then
+            -- cols[i].other.color = {0, 255, 0, 255}
+            self.player.pos = vector(actX, actY)
+            if cols[i].type == 'slide' then
+                if (cols[i].normal.x < 0 and self.player.vel.x > 0) or (cols[i].normal.x > 0 and self.player.vel.x < 0) then
+                    self.player.vel.x = 0
+                    self.player.acc.x = 0
+                end
+                if (cols[i].normal.y < 0 and self.player.vel.y > 0) then
+                    self.player.vel.y = 0
+                    self.player.acc.y = 0
+                    self.player.on_ground = true
+                elseif (cols[i].normal.y > 0 and self.player.vel.y < 0) then
+                    self.player.vel.y = 0
+                    self.player.acc.y = 0
+                end
+            end
+        end
+    end
+
+end
+
+function Game:draw()
+
+    self.map_offset.x = math.floor(-self.player.pos.x + love.graphics.getWidth()/2)
+    self.map_offset.y = math.floor(-self.player.pos.y + love.graphics.getHeight()/2)
+    self.camera:draw(function(l, t, w, h)
+        self.map:draw()
+        self.player:draw()
+        for i,o in pairs(self.world_objects) do
+            o:draw()
+        end
+        -- draw bump.lua rect for each item
+        if self.show_bump then
+            local items, len = self.world:queryRect(self.player.pos.x - love.graphics.getWidth()/2,
+                                                    self.player.pos.y - love.graphics.getHeight()/2,
+                                                    love.graphics.getWidth(), love.graphics.getHeight())
+            for i=1, len do
+                local x,y,w,h = self.world:getRect(items[i])
+                love.graphics.setColor(255, 255, 0, 100)
+                love.graphics.rectangle('fill', x,y,w,h)
+            end
+        end
+
+    end)
+    -- love.graphics.print(tostring(self.player.pos), 5, 5)
+    love.graphics.print(tostring(love.timer.getFPS()), love.graphics.getWidth() - 30, love.graphics.getHeight() - 20)
+end
