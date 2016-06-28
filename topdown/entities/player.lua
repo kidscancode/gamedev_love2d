@@ -12,9 +12,11 @@ function Player:initialize(x, y)
     self.rot = 0
     self.acc = vector(0, 0)
     self.vel = vector(0, 0)
+    self.walk_sounds = { assets.sounds.sfx_movement_footsteps1a, assets.sounds.sfx_movement_footsteps1b}
     -- self.gravity = 1500
     -- self.on_ground = false
-    -- gun settings
+    -- gun settings - can be different for different guns
+    self.shoot_sound = assets.sounds.sfx_wpn_machinegun_loop1
     self.rot_speed = 0.04
     self.fire_rate = 0.1
     self.precision = 9
@@ -45,6 +47,7 @@ function Player:update(dt)
             local dir = vector(1, 0):rotated(self.rot)
             local barrel = self.pos + self.offset/2 + vector(40, 10):rotated(self.rot)
             local b = Bullet:new(barrel, dir, self.precision)
+            self.shoot_sound:play()
             screen:setScale(1, 1)
             screen:setShake(3)
             self.acc = self.acc - vector(self.kickback, 0):rotated(self.rot)

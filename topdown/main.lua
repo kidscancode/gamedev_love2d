@@ -1,3 +1,7 @@
+-- Copyright 2016 KidsCanCode
+-- KidsCanCode
+-- Art by kenney.nl
+
 io.stdout:setvbuf('no') --fixes print issues
 
 --//////////////////////////////////--
@@ -17,20 +21,13 @@ screen = require "lib.shack" --Screen effects (shake, rotate, shear, scale)
 lem = require "lib.lem" --Event manager
 lue = require "lib.lue" --Hue
 state = require "lib.stager" --Manages scenes and transitions
-audio = require "lib.wave" --Audio manager
-class = require 'lib.middleclass'
-vector = require 'lib.vector'
-bump = require 'lib.bump'
-gamera = require 'lib.gamera'
-assets = require('lib.cargo').init('assets')
-sti = require('lib.sti')
-
-
---Includes - Custom libraries
-
-
-
---Classes
+--audio = require "lib.wave" --Audio manager/parser
+class = require 'lib.middleclass' -- Classes
+vector = require 'lib.vector' -- hump.lua vector class
+bump = require 'lib.bump' -- collision detection
+gamera = require 'lib.gamera' -- camera
+assets = require('lib.cargo').init('assets')  -- simple asset management
+sti = require('lib.sti') -- Tiled library
 
 --///////////////////////////////--
 --//-\\-//-[[- SETUP -]]-\\-//-\\--
