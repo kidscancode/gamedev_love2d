@@ -20,7 +20,7 @@ function Player:initialize(x, y)
     self.rot_speed = 0.04
     self.fire_rate = 0.1
     self.precision = 9
-    self.kickback = 250
+    self.kickback = 350
     self.last_shot = love.timer.getTime()
 end
 
@@ -34,7 +34,7 @@ function Player:update(dt)
     elseif love.keyboard.isDown('right') then
         self.rot = self.rot + self.rot_speed
     end
-    self.rot = self.rot % (2 * PI)
+    self.rot = self.rot % (2 * math.pi)
     if love.keyboard.isDown('up') then
         self.acc = vector(self.acceleration, 0):rotated(self.rot)
     elseif love.keyboard.isDown('down') then
@@ -50,7 +50,7 @@ function Player:update(dt)
             self.shoot_sound:play()
             screen:setScale(1, 1)
             screen:setShake(3)
-            self.acc = self.acc - vector(self.kickback, 0):rotated(self.rot)
+            self.acc = self.acc + vector(-1, 0):rotated(self.rot) * self.kickback
         end
     end
     -- if love.keyboard.isDown('space') then

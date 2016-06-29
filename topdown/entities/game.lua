@@ -114,6 +114,7 @@ function Game:draw()
         end
 
     end)
-    -- love.graphics.print(tostring(self.player.pos), 5, 5)
+    -- debug stats
+    love.graphics.print("P: ("..tostring(math.floor(self.player.pos.x))..","..tostring(math.floor(self.player.pos.y))..")", 5, love.graphics.getHeight() - 20)
     love.graphics.print(tostring(love.timer.getFPS()), love.graphics.getWidth() - 30, love.graphics.getHeight() - 20)
 end

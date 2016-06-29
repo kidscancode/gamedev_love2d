@@ -10,7 +10,6 @@ io.stdout:setvbuf('no') --fixes print issues
 
 WWIDTH, WHEIGHT = 1200,800 --Game dimensions - 1920/1080 = 16/9 aspect ratio
 
-PI = 3.14159
 --//////////////////////////////////--
 --//-\\-//-[[- INCLUDES -]]-\\-//-\\--
 --\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\--
