@@ -27,9 +27,9 @@ end
 --[[ External ]]--
 
 function love.keypressed(key, scancode, isrepeat)
-
-  --keypressed
-
+    if key == 'n' then
+        game.dark = not game.dark
+    end
 end
 
 --[[ End ]]--

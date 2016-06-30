@@ -57,6 +57,7 @@ function love.load()
     require "entities/player"
     require "entities/wall"
     require "entities/bullet"
+    require "entities/zombie"
 
     game = Game:new()
     screen:setDimensions(push:getDimensions())
