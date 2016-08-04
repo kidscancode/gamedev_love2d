@@ -42,7 +42,7 @@ end
 
 local objectFilter = function(item, other)
     if other:isInstanceOf(Wall) then return 'bounce' end
-    if other:isInstanceOf(Player) then return 'cross' end
+    if other:isInstanceOf(Player) then return 'touch' end
     if other:isInstanceOf(Zombie) then return 'bounce' end
 end
 
@@ -99,6 +99,12 @@ function Game:update(dt)
                 if o:isInstanceOf(Bullet) then
                     cols[i].other.health = cols[i].other.health - 1
                     o.delete = true
+                end
+            end
+            if cols[i].other:isInstanceOf(Player) then
+                if o:isInstanceOf(Zombie) then
+                    o.pos = vector(actX, actY)
+                    cols[i].other.vel = vector(o.knockback, 0):rotated(o.rot)
                 end
             end
         end
